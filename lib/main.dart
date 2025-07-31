@@ -10,7 +10,7 @@ import 'core/router/app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final ApiClient apiClient = ApiClient(); // Initialize your Dio client
+  final ApiClient apiClient = ApiClient();
 
   runApp(MyApp(prefs: prefs, apiClient: apiClient));
 }

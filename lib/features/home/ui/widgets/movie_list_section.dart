@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/models/movie.dart';
+import '../../../../core/router/app_router.dart';
 
 class MovieListSection extends StatelessWidget {
   final String title;
@@ -26,7 +27,7 @@ class MovieListSection extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 200,
+          height: 208,
           child: movies.isEmpty
               ? Center(
                   child: Text(
@@ -44,7 +45,12 @@ class MovieListSection extends StatelessWidget {
                       padding: const EdgeInsets.only(right: 12.0),
                       child: GestureDetector(
                         onTap: () {
-                          print('Tapped on: ${movie.title}');
+                          // *** THIS IS THE NAVIGATION LOGIC ***
+                          Navigator.of(context).pushNamed(
+                            AppRouter.movieDetailsRoute,
+                            arguments: movie
+                                .id, // Pass the movie ID to the details screen
+                          );
                         },
                         child: Column(
                           children: [
@@ -81,7 +87,7 @@ class MovieListSection extends StatelessWidget {
                             const SizedBox(height: 8.0),
                             SizedBox(
                               width: 120,
-                              height: 32,
+                              height: 40,
                               child: Text(
                                 movie.title,
                                 maxLines: 2,
