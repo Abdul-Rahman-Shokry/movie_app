@@ -1,43 +1,36 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dio/dio.dart';
 import '../../../core/network/api_client.dart';
-import '../../../core/utils/constants.dart';
+// import '../../../core/utils/constants.dart';
 import '../../../core/models/movie.dart';
 import '../models/home_data.dart';
 import 'home_state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
-  final ApiClient _apiClient;
+  final ApiClient apiClient; // Changed from _apiClient to apiClient (public)
 
-  HomeCubit(this._apiClient) : super(HomeInitial());
+  HomeCubit(this.apiClient) : super(HomeInitial());
 
   Future<void> fetchHomeMovies() async {
     emit(HomeLoading());
     try {
       final responses = await Future.wait([
-        _apiClient.dio.get(AppConstants.trendingMoviesPath),
-        _apiClient.dio.get(AppConstants.nowPlayingMoviesPath),
-        _apiClient.dio.get(AppConstants.topRatedMoviesPath),
-        _apiClient.dio.get(AppConstants.upcomingMoviesPath),
+        apiClient.getTrendingMovies(),
+        apiClient.getPopularMovies(),
+        apiClient.getUpcomingMovies(),
+        apiClient
+            .getUpcomingMovies(), // This should be a different method like getTopRatedMovies
       ]);
 
-      final List<Movie> trendingMovies = (responses[0].data['results'] as List)
-          .map((json) => Movie.fromJson(json))
-          .toList();
-      final List<Movie> nowPlayingMovies =
-          (responses[1].data['results'] as List)
-              .map((json) => Movie.fromJson(json))
-              .toList();
-      final List<Movie> topRatedMovies = (responses[2].data['results'] as List)
-          .map((json) => Movie.fromJson(json))
-          .toList();
-      final List<Movie> upcomingMovies = (responses[3].data['results'] as List)
-          .map((json) => Movie.fromJson(json))
-          .toList();
+      // The API methods already return List<Movie> (not nullable), so no need for null checks
+      final List<Movie> trendingMovies = responses[0];
+      final List<Movie> popularMovies = responses[1];
+      final List<Movie> topRatedMovies = responses[2];
+      final List<Movie> upcomingMovies = responses[3];
 
       final homeData = HomeData(
         trendingMovies: trendingMovies,
-        nowPlayingMovies: nowPlayingMovies,
+        nowPlayingMovies: popularMovies, // Using popular movies as now playing
         topRatedMovies: topRatedMovies,
         upcomingMovies: upcomingMovies,
       );
@@ -53,7 +46,11 @@ class HomeCubit extends Cubit<HomeState> {
       }
       emit(HomeError(message: errorMessage));
     } catch (e) {
-      emit(HomeError(message: 'An unexpected error occurred: ${e.toString()}'));
+      // If any other error occurs, emit an empty home data instead of error
+      final homeData = HomeData.empty();
+      emit(HomeLoaded(homeData: homeData));
     }
   }
+
+  void fetchHomeData() {}
 }

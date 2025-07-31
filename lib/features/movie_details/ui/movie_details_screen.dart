@@ -6,6 +6,7 @@ import 'package:movie_app/core/widgets/error_message.dart';
 import 'package:movie_app/core/widgets/loading_indicator.dart';
 import 'package:movie_app/features/movie_details/cubit/movie_details_state.dart';
 import '../cubit/movie_details_cubit.dart';
+import '../../../core/cubit/theme_cubit.dart'; // Import ThemeCubit
 
 class MovieDetailsScreen extends StatelessWidget {
   final int movieId;
@@ -33,6 +34,27 @@ class MovieDetailsScreen extends StatelessWidget {
                 icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () => Navigator.of(context).pop(),
               ),
+              actions: [
+                // Theme toggle icon
+                BlocBuilder<ThemeCubit, ThemeMode>(
+                  builder: (context, themeMode) {
+                    return IconButton(
+                      icon: Icon(
+                        themeMode == ThemeMode.dark
+                            ? Icons.light_mode
+                            : Icons.dark_mode,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        context.read<ThemeCubit>().toggleTheme();
+                      },
+                      tooltip: themeMode == ThemeMode.dark
+                          ? 'Switch to Light Mode'
+                          : 'Switch to Dark Mode',
+                    );
+                  },
+                ),
+              ],
             ),
             body: BlocBuilder<MovieDetailsCubit, MovieDetailsState>(
               builder: (context, state) {

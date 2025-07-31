@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../features/home/ui/home_screen.dart';
+import 'package:dio/dio.dart';
 import '../network/api_client.dart';
 import '../../features/movie_details/ui/movie_details_screen.dart';
 
@@ -15,8 +16,11 @@ class AppRouter {
         final args = settings.arguments;
         if (args is int) {
           return MaterialPageRoute(
-            builder: (_) {
-              return MovieDetailsScreen(movieId: args, apiClient: ApiClient());
+            builder: (context) {
+              return MovieDetailsScreen(
+                movieId: args,
+                apiClient: ApiClient(Dio()),
+              );
             },
           );
         }
