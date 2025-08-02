@@ -1,6 +1,7 @@
 # 🎬 MovieApp - Flutter Movie Discovery App
 
 A modern, feature-rich Flutter application for discovering and exploring movies. Built with clean architecture, BLoC pattern, and powered by The Movie Database (TMDB) API.
+![Screenshot 2025-08-02 150326](https://github.com/user-attachments/assets/9457022c-fc0a-4cb5-a8c5-fb6ffe4419ec)
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.8.1-blue?style=for-the-badge&logo=flutter)
 ![Dart](https://img.shields.io/badge/Dart-3.8.1-blue?style=for-the-badge&logo=dart)
